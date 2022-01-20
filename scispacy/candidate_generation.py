@@ -359,7 +359,7 @@ class CandidateGenerator:
 
 
 def create_tfidf_ann_index(
-    out_path: str, kb: KnowledgeBase = None
+    out_path: str, kb: KnowledgeBase = None, n_grams : int = 3,
 ) -> Tuple[List[str], TfidfVectorizer, FloatIndex]:
     """
     Build tfidf vectorizer and ann index.
@@ -410,9 +410,9 @@ def create_tfidf_ann_index(
     # resulting vectors using float16, meaning they take up half the memory on disk. Unfortunately
     # we can't use the float16 format to actually run the vectorizer, because of this bug in sparse
     # matrix representations in scipy: https://github.com/scipy/scipy/issues/7408
-    print(f"Fitting tfidf vectorizer on {len(concept_aliases)} aliases")
+    print(f"Fitting tfidf vectorizer on {len(concept_aliases)} aliases with {n_grams}-grams")
     tfidf_vectorizer = TfidfVectorizer(
-        analyzer="char_wb", ngram_range=(3, 3), min_df=10, dtype=numpy.float32
+        analyzer="char_wb", ngram_range=(n_grams, n_grams), min_df=10, dtype=numpy.float32
     )
     start_time = datetime.datetime.now()
     concept_alias_tfidfs = tfidf_vectorizer.fit_transform(concept_aliases)
