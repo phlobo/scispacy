@@ -1,5 +1,5 @@
 numpy
-spacy>=3.0.0,<3.1.0
+spacy>=3.2.0,<3.3.0
 spacy-lookups-data
 pandas
 requests>=2.0.0,<3.0.0
@@ -14,6 +14,7 @@ scikit-learn>=0.20.3
 pytest
 pytest-cov
 flake8
+# black currently pinned because of a dependency issue with spacy, typer, and click
 black
 mypy
 types-requests
