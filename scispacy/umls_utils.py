@@ -37,7 +37,7 @@ def read_umls_file_headers(meta_path: str, filename: str) -> List[str]:
     return None
 
 
-def read_umls_concepts(meta_path: str, concept_details: Dict, source: str = None, lang: str = None):
+def read_umls_concepts(meta_path: str, concept_details: Dict, source: str = None, lang: str = None, non_suppressed : bool= True):
     """
     Read the concepts file MRCONSO.RRF from a UMLS release and store it in
     concept_details dictionary. Each concept is represented with
@@ -57,6 +57,7 @@ def read_umls_concepts(meta_path: str, concept_details: Dict, source: str = None
         source: An optional source identifier, used as a filter to extract only a
                 specific source from UMLS.
         lang: An optional language identifier, used to filter terms by language
+        non_suppressed: flag to indicate whether only non-suppressed concepts should be kept
     """
     concepts_filename = "MRCONSO.RRF"
     headers = read_umls_file_headers(meta_path, concepts_filename)
@@ -65,7 +66,7 @@ def read_umls_concepts(meta_path: str, concept_details: Dict, source: str = None
             splits = line.strip().split("|")
             assert len(headers) == len(splits), (headers, splits)
             concept = dict(zip(headers, splits))
-            if (lang is not None and concept["LAT"] != lang) or concept["SUPPRESS"] != "N":
+            if (lang is not None and concept["LAT"] != lang) or (non_suppressed and concept["SUPPRESS"] != "N"):
                 continue  # Keep non-suppressed concepts in target language only
 
             if source is not None:
